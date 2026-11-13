@@ -1,5 +1,6 @@
 import math
 import pygame
+from model.TerrainTempo import ROAD 
 from constants import (
     CAR_ACCELERATION, CAR_TURN_RATE, CAR_AIR_DRAG,
     CAR_WIDTH, CAR_HEIGHT, TILE_SIZE
@@ -19,6 +20,8 @@ class Car:
         self.angle = 270.0
         self.throttle = 0    
         self.steering = 0   
+        self.terrain = ROAD
+        self.drifting = False
         self.sprite = self.build_sprite()
 
     def accelerate(self) -> None:
@@ -43,14 +46,27 @@ class Car:
         """
         rad = math.radians(self.angle)
         return pygame.Vector2(math.cos(rad), -math.sin(rad))
-
+    
     def update_position(self) -> None:
-        """Met à jour l'orientation, la vitesse et la position pour une image."""
+        """Met a jour l'orientation, la vitesse et la position pour une image.
+        La vitesse est décomposee en une partie longitudinale, dans l'axe de
+        la voiture et une partie latérale. La partie laterale
+        décide si la voiture adhere ou derape, selon le terrain.
+        """
         speed = self.velocity.dot(self.forward())
         self.angle += self.steering * CAR_TURN_RATE * speed
-        self.velocity += self.forward() * self.throttle * CAR_ACCELERATION
+        front = self.forward()
+        side = pygame.Vector2(-front.y, front.x)
+        v_long = self.velocity.dot(front)
+        v_lat = self.velocity.dot(side)
+        v_long += self.throttle * CAR_ACCELERATION * self.terrain.traction
+        self.drifting = abs(v_lat) > self.terrain.drift_threshold
+        if self.drifting:
+            v_lat *= 1 - self.terrain.drift_friction
+        else:
+            v_lat = 0
+        self.velocity = front * v_long + side * v_lat
         self.velocity *= 1 - CAR_AIR_DRAG
-        self.velocity = self.forward() * self.velocity.dot(self.forward())
         self.position += self.velocity
         self.throttle = 0
         self.steering = 0
