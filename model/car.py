@@ -1,6 +1,6 @@
 import math
 import pygame
-from model.TerrainTempo import ROAD 
+from model.terrain_tempo import ROAD 
 from constants import (
     CAR_ACCELERATION, CAR_TURN_RATE, CAR_AIR_DRAG,
     CAR_WIDTH, CAR_HEIGHT, TILE_SIZE

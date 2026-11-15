@@ -1,4 +1,4 @@
-from model.TerrainTempo import ROAD, GRASS, DIRT, ICE
+from model.terrain_tempo import ROAD, GRASS, DIRT, ICE
 from model.tile import Tile
 from model.circuit import Circuit
 
