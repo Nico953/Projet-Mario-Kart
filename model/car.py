@@ -14,7 +14,8 @@ class Car:
     par image. L'angle est en degrés, en convention trigonométrique 0 = vers la droite, 90 = vers le haut de l'écran.
     """
 
-    def __init__(self, start_col: int, start_row: int):
+    def __init__(self, start_col: int, start_row: int,
+                 color: tuple[int, int, int] = (255, 0, 0)):
         self.position = pygame.Vector2(start_col * TILE_SIZE + TILE_SIZE / 2,start_row * TILE_SIZE + TILE_SIZE / 2)
         self.velocity = pygame.Vector2(0, 0)
         self.angle = 270.0
@@ -22,6 +23,7 @@ class Car:
         self.steering = 0   
         self.terrain = ROAD
         self.drifting = False
+        self.color = color
         self.sprite = self.build_sprite()
 
     def accelerate(self) -> None:
@@ -74,7 +76,7 @@ class Car:
     def build_sprite(self) -> pygame.Surface:
         """Dessine la voiture pointee vers la droite (angle 0)."""
         surf = pygame.Surface((CAR_HEIGHT, CAR_WIDTH), pygame.SRCALPHA)
-        pygame.draw.rect(surf, (255, 0, 0), surf.get_rect(), border_radius=5)
+        pygame.draw.rect(surf, self.color, surf.get_rect(), border_radius=5)
         pygame.draw.rect(surf, (255, 255, 255),
                          (CAR_HEIGHT - 10, 5, 6, CAR_WIDTH - 10))
         return surf

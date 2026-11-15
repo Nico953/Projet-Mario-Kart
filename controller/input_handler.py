@@ -1,27 +1,33 @@
 import pygame
 
 
-MAPPING = {
-    pygame.K_UP: "accelerate",
-    pygame.K_DOWN: "brake",
-    pygame.K_LEFT: "left",
-    pygame.K_RIGHT: "right",
+PLAYER_1_KEYS = {
+    "accelerate": [pygame.K_z],
+    "brake": [pygame.K_s],
+    "left": [pygame.K_q,],
+    "right": [pygame.K_d],
 }
 
+PLAYER_2_KEYS = {
+    "accelerate": [pygame.K_UP],
+    "brake": [pygame.K_DOWN],
+    "left": [pygame.K_LEFT],
+    "right": [pygame.K_RIGHT],
+}
 
 class InputHandler:
     """Lit l'etat du clavier et le traduit en actions de jeu."""
 
     def __init__(self):
-        self.mapping = MAPPING
+        self.players_keys = [PLAYER_1_KEYS, PLAYER_2_KEYS]
 
-    def get_inputs(self) -> dict:
-        """Renvoie un dictionnaire action -> touche enfoncee ou non."""
+    def get_inputs(self) -> list[dict]:
+        """Renvoie, pour chaque joueur, un dictionnaire action = touche enfoncee."""
         keys = pygame.key.get_pressed()
-        p = {action: False for action in self.mapping.values()}
-
-        for key, action in self.mapping.items():
-            if keys[key]:
-                p[action] = True
-
-        return p
+        inputs = []
+        for mapping in self.players_keys:
+            actions = {}
+            for action, action_keys in mapping.items():
+                actions[action] = any(keys[k] for k in action_keys)
+            inputs.append(actions)
+        return inputs

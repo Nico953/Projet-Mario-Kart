@@ -52,9 +52,9 @@ class GameController:
         if self.model.state != GameState.RACING:
             return
 
-        p1_input = self.input_handler.get_inputs()
-        car = self.model.car
-        self.apply_input(car, p1_input)
+        inputs = self.input_handler.get_inputs()
+        for car, player_input in zip(self.model.cars, inputs):
+            self.apply_input(car, player_input)
         self.model.update()
 
     def apply_input(self, car, player_input) -> None:

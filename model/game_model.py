@@ -9,19 +9,20 @@ class GameModel:
     def __init__(self):
         self.state: str = GameState.MENU
         self.circuit: Circuit | None = None
-        self.car: Car | None = None
+        self.cars: list[Car] = []
 
     def load_circuit(self) -> None:
         self.circuit = build_circuit(CIRCUIT_1)
         self.spawn_car()
 
     def spawn_car(self) -> None:
-        self.car = Car(7, 1)
+        self.cars = [Car(6, 1, (220, 40, 40)), Car(9, 1, (40, 90, 220))]
 
     def update(self) -> None:
         if self.state != GameState.RACING or self.circuit is None:
             return
-        tile = self.circuit.get_tile_at_pixel(self.car.position.x, self.car.position.y)
-        if tile is not None:
-            self.car.terrain = tile.terrain
-        self.car.update_position()
+        for car in self.cars:
+            tile = self.circuit.get_tile_at_pixel(car.position.x, car.position.y)
+            if tile is not None:
+                car.terrain = tile.terrain
+            car.update_position()
