@@ -21,4 +21,7 @@ class GameModel:
     def update(self) -> None:
         if self.state != GameState.RACING or self.circuit is None:
             return
+        tile = self.circuit.get_tile_at_pixel(self.car.position.x, self.car.position.y)
+        if tile is not None:
+            self.car.terrain = tile.terrain
         self.car.update_position()
