@@ -1,7 +1,7 @@
-from constants import GameState, GRID_ROWS, GRID_COLS
+from constants import GameState
 from model.car import Car
 from model.circuit import Circuit
-from model.road_tile import RoadTile
+from model.circuit_maps import build_circuit, CIRCUIT_1
 
 
 class GameModel:
@@ -12,9 +12,7 @@ class GameModel:
         self.car: Car | None = None
 
     def load_circuit(self) -> None:
-        grid = [[RoadTile(col=col_idx, row=row_idx)
-                for row_idx in range(GRID_COLS)] for col_idx in range(GRID_ROWS)]
-        self.circuit = Circuit(grid=grid)
+        self.circuit = build_circuit(CIRCUIT_1)
         self.spawn_car()
 
     def spawn_car(self) -> None:
