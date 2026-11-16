@@ -5,31 +5,35 @@ from model.circuit import Circuit
 LEGEND = {
     "R": (ROAD, (80, 80, 90)),
     "G": (GRASS, (50, 140, 60)),
-    "I": (ICE, (214, 234, 240)),
+    "I": (ICE, (120, 190, 240)),
     "D": (DIRT, (155, 118, 83)),
     "1": (ROAD, (80, 80, 90)),
     "2": (ROAD, (80, 80, 90)),
-    "W": (ROAD, (40, 40, 45)),
+    "W": (ROAD, (150, 50, 40)),
+    "C": (ROAD, (230, 200, 60)),
+    "L": (ROAD, (240, 240, 240)),
 }
 
 CIRCUIT_1 = [
     "WWWWWWWWWWWWWWWW",
-    "WRRRRR1RR2RRRRRW",
-    "WRRRRRRRRRRRRRRW",
+    "WRRRRL1RR2RRRRRW",
+    "WRRRRLRRRRRRRRRW",
     "WRRGGGGGGGGGGRRW",
     "WRRGGGGDGGGGGRRW",
     "WRRGGRIIIIRGGRRW",
     "WRRGGRIIIIRGGRRW",
-    "WRRGGRRDGRRGGRRW",
+    "WRRGGCCWWCCGGRRW",
     "WRRGGRRGGRRGGRRW",
-    "WRRRRRRGGRRDDRRW",
-    "WRRRRRRGGRRDDRRW",
+    "WRRCRRRGGRRDDCRW",   
+    "WRRCRRRGGRRDDCRW",   
     "WWWWWWWWWWWWWWWW",
 ]
 def build_circuit(layout):
     grid = []
     starts = {}  
-    walls  =set()                                  
+    walls  =set()  
+    checkpoints = set()  
+    finish = set()                              
     for row_idx, line in enumerate(layout):
         row = []
         for col_idx, letter in enumerate(line):
@@ -39,8 +43,14 @@ def build_circuit(layout):
                 starts[letter] = (col_idx, row_idx)  
             if letter == "W":
                 walls.add((col_idx, row_idx))
+            if letter == "C":
+                checkpoints.add((col_idx, row_idx))
+            if letter == "L":
+                finish.add((col_idx, row_idx))
         grid.append(row)
     circuit = Circuit(grid)
     circuit.starts = starts
     circuit.walls = walls
+    circuit.checkpoints = checkpoints
+    circuit.finish = finish
     return circuit
