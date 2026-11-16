@@ -16,7 +16,9 @@ class GameModel:
         self.spawn_car()
 
     def spawn_car(self) -> None:
-        self.cars = [Car(6, 1, (220, 40, 40)), Car(9, 1, (40, 90, 220))]
+        col1, row1 = self.circuit.starts["1"]
+        col2, row2 = self.circuit.starts["2"]
+        self.cars = [Car(col1, row1, (220, 40, 40)), Car(col2, row2, (40, 90, 220))]
 
     def update(self) -> None:
         if self.state != GameState.RACING or self.circuit is None:
