@@ -24,6 +24,8 @@ class Car:
         self.terrain = ROAD
         self.drifting = False
         self.color = color
+        self.effects = []
+        self.acceleration_factor = 1.0
         self.sprite = self.build_sprite()
 
     def accelerate(self) -> None:
@@ -42,6 +44,18 @@ class Car:
         """Diminue l'angle de braquage."""
         self.steering = -1
 
+    def add_effect(self, effect) -> None:
+        """Ajoute un effet a la voiture."""
+        self.effects.append(effect)
+
+    def update_effects(self) -> None:
+        """Applique les effets actifs pour cette image et retire ceux qui sont finis."""
+        self.acceleration_factor = 1.0
+        for effect in self.effects:
+            effect.apply(self)
+            effect.tick()
+        self.effects = [e for e in self.effects if not e.is_finished()]
+
     def forward(self) -> pygame.Vector2:
         """Vecteur unitaire dans la direction où pointe la voiture.
         Le signe moins vient de l'axe y de l'écran, qui va vers le bas.
@@ -55,13 +69,14 @@ class Car:
         la voiture et une partie latérale. La partie laterale
         décide si la voiture adhere ou derape, selon le terrain.
         """
+        self.update_effects()
         speed = self.velocity.dot(self.forward())
         self.angle += self.steering * CAR_TURN_RATE * speed
         front = self.forward()
         side = pygame.Vector2(-front.y, front.x)
         v_long = self.velocity.dot(front)
         v_lat = self.velocity.dot(side)
-        v_long += self.throttle * CAR_ACCELERATION * self.terrain.traction
+        v_long += (self.throttle * CAR_ACCELERATION * self.terrain.traction * self.acceleration_factor)
         self.drifting = abs(v_lat) > self.terrain.drift_threshold
         if self.drifting:
             v_lat *= 1 - self.terrain.drift_friction

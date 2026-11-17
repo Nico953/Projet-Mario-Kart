@@ -53,3 +53,4 @@ class GameModel:
                 car.position.x = col * TILE_SIZE + TILE_SIZE / 2
                 car.position.y = row * TILE_SIZE + TILE_SIZE / 2
                 car.velocity *= 0
+                
