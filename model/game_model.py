@@ -26,6 +26,7 @@ class GameModel:
         self.passed = [set() for car in self.cars]
         self.winner = None
         self.last_checkpoint = [self.circuit.starts["1"], self.circuit.starts["2"]]
+        from model.effects import SlowEffect, StunEffect, InvincibilityEffect
 
     def update(self) -> None:
         if self.state != GameState.RACING or self.circuit is None:

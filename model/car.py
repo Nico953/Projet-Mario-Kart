@@ -26,6 +26,7 @@ class Car:
         self.color = color
         self.effects = []
         self.acceleration_factor = 1.0
+        self.invincible = False
         self.sprite = self.build_sprite()
 
     def accelerate(self) -> None:
@@ -45,12 +46,16 @@ class Car:
         self.steering = -1
 
     def add_effect(self, effect) -> None:
-        """Ajoute un effet a la voiture."""
+        """Ajoute un effet à la voiture, sauf s'il est negatif et qu'elle est invincible."""
+        if effect.harmful and self.invincible:
+            return
+        effect.on_start(self)
         self.effects.append(effect)
 
     def update_effects(self) -> None:
         """Applique les effets actifs pour cette image et retire ceux qui sont finis."""
         self.acceleration_factor = 1.0
+        self.invincible = False
         for effect in self.effects:
             effect.apply(self)
             effect.tick()
