@@ -1,7 +1,8 @@
-from constants import GameState
+from constants import GameState, TILE_SIZE
 from model.car import Car
 from model.circuit import Circuit
 from model.circuit_maps import build_circuit, CIRCUIT_1
+
 
 
 class GameModel:
@@ -24,6 +25,7 @@ class GameModel:
         self.laps = [0 for car in self.cars]
         self.passed = [set() for car in self.cars]
         self.winner = None
+        self.last_checkpoint = [self.circuit.starts["1"], self.circuit.starts["2"]]
 
     def update(self) -> None:
         if self.state != GameState.RACING or self.circuit is None:
@@ -36,6 +38,7 @@ class GameModel:
                 for k, group in enumerate(self.circuit.checkpoints):
                     if pos in group:
                         self.passed[i].add(k)
+                        self.last_checkpoint[i] = pos
                 if pos in self.circuit.finish and len(self.passed[i]) == len(self.circuit.checkpoints):
                     self.laps[i] += 1
                     self.passed[i] = set()
@@ -44,3 +47,9 @@ class GameModel:
                     self.winner = i + 1
                     print("Gagnant : voiture", self.winner)
             car.update_position()
+            tile = self.circuit.get_tile_at_pixel(car.position.x, car.position.y)
+            if tile is None or (tile.col, tile.row) in self.circuit.voids:
+                col, row = self.last_checkpoint[i]
+                car.position.x = col * TILE_SIZE + TILE_SIZE / 2
+                car.position.y = row * TILE_SIZE + TILE_SIZE / 2
+                car.velocity *= 0
