@@ -12,6 +12,7 @@ LEGEND = {
     "W": (ROAD, (150, 50, 40)),
     "C": (ROAD, (230, 200, 60)),
     "L": (ROAD, (240, 240, 240)),
+    "V": (ROAD, (10, 10, 10)),
 }
 
 CIRCUIT_1 = [
@@ -19,11 +20,11 @@ CIRCUIT_1 = [
     "WRRRRL1RR2RRRRRW",
     "WRRRRLRRRRRRRRRW",
     "WRRGGGGGGGGGGRRW",
-    "WRRGGGGDGGGGGRRW",
-    "WRRGGRIIIIRGGRRW",
-    "WRRGGRIIIIRGGRRW",
-    "WRRGGCCWWCCGGRRW",
-    "WRRGGRRGGRRGGRRW",
+    "WRRGGGVGVGGGGRRW",
+    "WRRWVRIIIIRGGRRW",
+    "WRRWVRIIIIRGGRRW",
+    "WRRWGCCWWCCGGRRW",
+    "WRRWGRRGGRRGGRRW",
     "WRRCRRRGGRRDDCRW",   
     "WRRCRRRGGRRDDCRW",   
     "WWWWWWWWWWWWWWWW",
@@ -33,7 +34,8 @@ def build_circuit(layout):
     starts = {}  
     walls  =set()  
     checkpoints = []  
-    finish = set()                              
+    finish = set()  
+    voids = set()                            
     for row_idx, line in enumerate(layout):
         row = []
         for col_idx, letter in enumerate(line):
@@ -43,6 +45,8 @@ def build_circuit(layout):
                 starts[letter] = (col_idx, row_idx)  
             if letter == "W":
                 walls.add((col_idx, row_idx))
+            if letter == "V":
+                voids.add((col_idx, row_idx))
             if letter == "C":
                 group = None
                 for g in checkpoints:
@@ -60,5 +64,6 @@ def build_circuit(layout):
     circuit.walls = walls
     circuit.checkpoints = checkpoints
     circuit.finish = finish
+    circuit.voids = voids
 
     return circuit
