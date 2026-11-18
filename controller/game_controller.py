@@ -2,7 +2,7 @@ import pygame
 import sys
 from constants import (
     WINDOW_WIDTH, WINDOW_HEIGHT, FPS,
-    GameState
+    GameState, CAR_MODELS
 )
 from model.game_model import GameModel
 from view.game_view import GameView
@@ -42,7 +42,19 @@ class GameController:
             self.handle_menu_key(key)
 
     def handle_menu_key(self, key: int) -> None:
-        if key == pygame.K_RETURN:
+        """Gère le changement de modèle de voiture dans le menu et le lancement de la course."""
+        nb_models = len(CAR_MODELS)
+        # Joueur 1 : sélection du modèle avec Q et D
+        if key == pygame.K_q:
+            self.model.selected_models[0] = (self.model.selected_models[0] - 1) % nb_models
+        elif key == pygame.K_d:
+            self.model.selected_models[0] = (self.model.selected_models[0] + 1) % nb_models
+        # Joueur 2 : sélection du modèle avec les flèches gauche et droite
+        elif key == pygame.K_LEFT:
+            self.model.selected_models[1] = (self.model.selected_models[1] - 1) % nb_models
+        elif key == pygame.K_RIGHT:
+            self.model.selected_models[1] = (self.model.selected_models[1] + 1) % nb_models
+        elif key == pygame.K_RETURN:
             self.model.load_circuit()
             self.model.state = GameState.RACING
         elif key == pygame.K_ESCAPE:

@@ -1,4 +1,4 @@
-from constants import GameState, TILE_SIZE
+from constants import GameState, TILE_SIZE, CAR_MODELS, COLOR_P1, COLOR_P2
 from model.car import Car
 from model.circuit import Circuit
 from model.circuit_maps import build_circuit, CIRCUIT_1
@@ -11,6 +11,8 @@ class GameModel:
         self.state: str = GameState.MENU
         self.circuit: Circuit | None = None
         self.cars: list[Car] = []
+        # Index des modèles de voitures sélectionnés dans le menu pour J1 et J2
+        self.selected_models = [0, 1]
         
         self.laps_to_win = 3
 
@@ -21,7 +23,10 @@ class GameModel:
     def spawn_car(self) -> None:
         col1, row1 = self.circuit.starts["1"]
         col2, row2 = self.circuit.starts["2"]
-        self.cars = [Car(col1, row1, (220, 40, 40)), Car(col2, row2, (40, 90, 220))]
+        # Création des deux voitures avec le modèle personnalisé choisi par chaque joueur
+        spec1 = CAR_MODELS[self.selected_models[0]]
+        spec2 = CAR_MODELS[self.selected_models[1]]
+        self.cars = [Car(col1, row1, COLOR_P1, spec1), Car(col2, row2, COLOR_P2, spec2)]
         self.laps = [0 for car in self.cars]
         self.passed = [set() for car in self.cars]
         self.winner = None
@@ -54,4 +59,3 @@ class GameModel:
                 car.position.x = col * TILE_SIZE + TILE_SIZE / 2
                 car.position.y = row * TILE_SIZE + TILE_SIZE / 2
                 car.velocity *= 0
-                
