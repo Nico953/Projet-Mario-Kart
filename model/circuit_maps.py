@@ -36,7 +36,8 @@ def build_circuit(layout):
     walls  =set()  
     checkpoints = []  
     finish = set()  
-    voids = set()                            
+    voids = set()
+    boosts = set()                            
     for row_idx, line in enumerate(layout):
         row = []
         for col_idx, letter in enumerate(line):
@@ -45,9 +46,7 @@ def build_circuit(layout):
             if letter in "12":                       
                 starts[letter] = (col_idx, row_idx)  
             if letter == "W":
-                walls.add((col_idx, row_idx))
-            if letter == "V":
-                voids.add((col_idx, row_idx))
+                walls.add((col_idx, row_idx))          
             if letter == "C":
                 group = None
                 for g in checkpoints:
@@ -59,6 +58,10 @@ def build_circuit(layout):
                 group.add((col_idx, row_idx))
             if letter == "L":
                 finish.add((col_idx, row_idx))
+            if letter == "V":
+                voids.add((col_idx, row_idx)) 
+            if letter == "B":
+                boosts.add((col_idx, row_idx))
         grid.append(row)
     circuit = Circuit(grid)
     circuit.starts = starts
@@ -66,5 +69,6 @@ def build_circuit(layout):
     circuit.checkpoints = checkpoints
     circuit.finish = finish
     circuit.voids = voids
+    circuit.boosts = boosts
 
     return circuit
