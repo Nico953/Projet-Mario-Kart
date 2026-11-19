@@ -14,6 +14,7 @@ LEGEND = {
     "L": (ROAD, (240, 240, 240)),
     "V": (ROAD, (10, 10, 10)),
     "B": (ROAD, (255, 60, 200)),
+    "M": (ROAD, (80, 80, 90)),
 }
 
 CIRCUIT_1 = [
@@ -22,10 +23,10 @@ CIRCUIT_1 = [
     "WRRRRLRRRRRRRRRW",
     "WRRGGGGGGGGGGBBW",
     "WRRGGGVGVGGGGRRW",
-    "WRRWVRIIIIRGGRRW",
-    "WRRWVRIIIIRGGRRW",
-    "WRRWGCCWWCCGGRRW",
-    "WRRWGRRGGRRGGRRW",
+    "WRRGVRIIIIRGGRRW",
+    "WMMGVRIIIIRGGRRW",
+    "WRRGGCCWWCCGGRRW",
+    "WRRGGRRGGRRGGRRW",
     "WRRCRRRGGRRDDCRW",   
     "WRRCRRRGGRRDDCRW",   
     "WWWWWWWWWWWWWWWW",
@@ -37,7 +38,8 @@ def build_circuit(layout):
     checkpoints = []  
     finish = set()  
     voids = set()
-    boosts = set()                            
+    boosts = set()  
+    item_boxes = set()                          
     for row_idx, line in enumerate(layout):
         row = []
         for col_idx, letter in enumerate(line):
@@ -62,6 +64,8 @@ def build_circuit(layout):
                 voids.add((col_idx, row_idx)) 
             if letter == "B":
                 boosts.add((col_idx, row_idx))
+            if letter == "M":
+                item_boxes.add((col_idx, row_idx))
         grid.append(row)
     circuit = Circuit(grid)
     circuit.starts = starts
@@ -70,5 +74,6 @@ def build_circuit(layout):
     circuit.finish = finish
     circuit.voids = voids
     circuit.boosts = boosts
+    circuit.item_boxes = item_boxes
 
     return circuit
