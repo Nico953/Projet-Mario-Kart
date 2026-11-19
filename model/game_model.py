@@ -1,8 +1,9 @@
-from constants import GameState, TILE_SIZE, CAR_MODELS, COLOR_P1, COLOR_P2
+from constants import GameState, TILE_SIZE, CAR_MODELS, COLOR_P1, COLOR_P2, FPS
 from model.car import Car
 from model.circuit import Circuit
 from model.circuit_maps import build_circuit, CIRCUIT_1
 from model.effects import BoostEffect
+from model.item import create_item_boxes
 
 
 
@@ -20,6 +21,7 @@ class GameModel:
     def load_circuit(self) -> None:
         self.circuit = build_circuit(CIRCUIT_1)
         self.spawn_car()
+        self.item_boxes = create_item_boxes(list(self.circuit.item_boxes))
 
     def spawn_car(self) -> None:
         col1, row1 = self.circuit.starts["1"]
@@ -38,6 +40,8 @@ class GameModel:
     def update(self) -> None:
         if self.state != GameState.RACING or self.circuit is None:
             return
+        for box in self.item_boxes:
+            box.update(1 / FPS, self.cars)
         for i, car in enumerate(self.cars):
             tile = self.circuit.get_tile_at_pixel(car.position.x, car.position.y)
             if tile is not None:
