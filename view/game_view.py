@@ -94,6 +94,9 @@ class GameView:
 
         if model.circuit is None:
             return
+        for box in model.item_boxes:
+            box.draw(self.screen)
         for car in model.cars:
             surf, rect = car.get_rotated_sprite()
             self.screen.blit(surf, rect)
+        
