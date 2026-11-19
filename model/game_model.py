@@ -2,6 +2,7 @@ from constants import GameState, TILE_SIZE, CAR_MODELS, COLOR_P1, COLOR_P2
 from model.car import Car
 from model.circuit import Circuit
 from model.circuit_maps import build_circuit, CIRCUIT_1
+from model.effects import BoostEffect
 
 
 
@@ -31,6 +32,7 @@ class GameModel:
         self.passed = [set() for car in self.cars]
         self.winner = None
         self.last_checkpoint = [self.circuit.starts["1"], self.circuit.starts["2"]]
+        self.on_boost = [False for car in self.cars]
         from model.effects import SlowEffect, StunEffect, InvincibilityEffect
 
     def update(self) -> None:
@@ -52,6 +54,12 @@ class GameModel:
                 if self.laps[i] >= self.laps_to_win and self.winner is None:
                     self.winner = i + 1
                     print("Gagnant : voiture", self.winner)
+                if pos in self.circuit.boosts:
+                    if not self.on_boost[i]:
+                        car.add_effect(BoostEffect())
+                        self.on_boost[i] = True
+                else:
+                    self.on_boost[i] = False
             car.update_position()
             tile = self.circuit.get_tile_at_pixel(car.position.x, car.position.y)
             if tile is None or (tile.col, tile.row) in self.circuit.voids:
