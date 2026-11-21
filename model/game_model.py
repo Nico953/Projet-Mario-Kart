@@ -18,7 +18,7 @@ class GameModel:
         
         self.laps_to_win = 3
 
-    def load_circuit(self, number=1) -> None:
+    def load_circuit(self, number=2) -> None:
         data = CIRCUITS[number]
         self.circuit = build_circuit(data["layout"])
         self.circuit.order = data["order"]

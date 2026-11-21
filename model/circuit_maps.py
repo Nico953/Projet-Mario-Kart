@@ -45,6 +45,20 @@ CIRCUIT_2 = [
     "WGGGGGRCCRGGGGGW",
     "WWWWWWWWWWWWWWWW",
 ]
+CIRCUIT_3 = [
+    "WWWWWWWWWWWWWWWW",
+    "WVRRRRVVVVRRRRVW",
+    "WIIWWRRVVRRWWIIW",
+    "WRRWBWRMMRWBWRRW",
+    "WCCWGGWRRWGGWCCW",
+    "WRRWIIWLLWIIWRRW",
+    "WMRWIIW12WIIWRMW",
+    "WRRWGGWRRWGGWRRW",
+    "WRRWBWRRRRWBWRRW",
+    "WRRWWRRVVRRWWRRW",
+    "WVRRRRVVVVRRRRVW",
+    "WWWWWWWWWWWWWWWW",
+]
 
 def build_circuit(layout):
     grid = []
@@ -94,5 +108,6 @@ def build_circuit(layout):
     return circuit
 CIRCUITS = [
     {"layout": CIRCUIT_1, "order": [[3, 1, 0, 2], [3, 1, 0, 2]], "laps": 3},
-    {"layout": CIRCUIT_2, "order": [[2, 1, 0], [2, 1, 0]], "laps": 5},
+    {"layout": CIRCUIT_2, "order": [[2, 1, 0], [2, 1, 0]], "laps": 5},   
+    {"layout": CIRCUIT_3, "order": [[0, 1], [1, 0]], "laps": 3},
 ]
