@@ -1,7 +1,7 @@
 from constants import GameState, TILE_SIZE, CAR_MODELS, COLOR_P1, COLOR_P2, FPS
 from model.car import Car
 from model.circuit import Circuit
-from model.circuit_maps import build_circuit, CIRCUIT_1
+from model.circuit_maps import build_circuit, CIRCUITS
 from model.effects import BoostEffect
 from model.item import create_item_boxes
 
@@ -18,8 +18,11 @@ class GameModel:
         
         self.laps_to_win = 3
 
-    def load_circuit(self) -> None:
-        self.circuit = build_circuit(CIRCUIT_1)
+    def load_circuit(self, number=1) -> None:
+        data = CIRCUITS[number]
+        self.circuit = build_circuit(data["layout"])
+        self.circuit.order = data["order"]
+        self.laps_to_win = data["laps"]
         self.spawn_car()
         self.item_boxes = create_item_boxes(list(self.circuit.item_boxes))
 

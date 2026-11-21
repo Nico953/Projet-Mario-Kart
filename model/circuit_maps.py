@@ -92,3 +92,7 @@ def build_circuit(layout):
     circuit.item_boxes = item_boxes
 
     return circuit
+CIRCUITS = [
+    {"layout": CIRCUIT_1, "order": [[3, 1, 0, 2], [3, 1, 0, 2]], "laps": 3},
+    {"layout": CIRCUIT_2, "order": [[2, 1, 0], [2, 1, 0]], "laps": 5},
+]
