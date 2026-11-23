@@ -4,6 +4,7 @@ from constants import (
     WINDOW_WIDTH, WINDOW_HEIGHT, FPS,
     GameState, CAR_MODELS
 )
+from model.circuit_maps import CIRCUITS
 from model.game_model import GameModel
 from view.game_view import GameView
 from controller.input_handler import InputHandler
@@ -40,10 +41,13 @@ class GameController:
 
         if state == GameState.MENU:
             self.handle_menu_key(key)
+        elif state == GameState.RACING:
+            self.handle_racing_key(key)
 
     def handle_menu_key(self, key: int) -> None:
-        """Gère le changement de modèle de voiture dans le menu et le lancement de la course."""
+        """Gère le changement de modèle de voiture, de circuit et le lancement de la course."""
         nb_models = len(CAR_MODELS)
+        nb_circuits = len(CIRCUITS)
         # Joueur 1 : sélection du modèle avec Q et D
         if key == pygame.K_q:
             self.model.selected_models[0] = (self.model.selected_models[0] - 1) % nb_models
@@ -54,11 +58,23 @@ class GameController:
             self.model.selected_models[1] = (self.model.selected_models[1] - 1) % nb_models
         elif key == pygame.K_RIGHT:
             self.model.selected_models[1] = (self.model.selected_models[1] + 1) % nb_models
+        # Sélection du circuit avec Z/S ou Haut/Bas
+        elif key in (pygame.K_z, pygame.K_UP):
+            self.model.selected_circuit = (self.model.selected_circuit - 1) % nb_circuits
+        elif key in (pygame.K_s, pygame.K_DOWN):
+            self.model.selected_circuit = (self.model.selected_circuit + 1) % nb_circuits
         elif key == pygame.K_RETURN:
-            self.model.load_circuit()
+            self.model.load_circuit(self.model.selected_circuit)
             self.model.state = GameState.RACING
         elif key == pygame.K_ESCAPE:
             self.quit()
+
+    def handle_racing_key(self, key: int) -> None:
+        """Gère les raccourcis clavier ponctuels pendant la course (retour menu, rejouer)."""
+        if key == pygame.K_ESCAPE:
+            self.model.state = GameState.MENU
+        elif key == pygame.K_RETURN and self.model.winner is not None:
+            self.model.load_circuit(self.model.selected_circuit)
 
     def update(self) -> None:
         if self.model.state != GameState.RACING:
