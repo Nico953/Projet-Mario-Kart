@@ -72,7 +72,7 @@ class GameModel:
                         self.on_boost[i] = True
                 else:
                     self.on_boost[i] = False
-            car.update_position()
+            car.update_position(self.circuit.walls)
             tile = self.circuit.get_tile_at_pixel(car.position.x, car.position.y)
             if tile is None or (tile.col, tile.row) in self.circuit.voids:
                 col, row = self.last_checkpoint[i]

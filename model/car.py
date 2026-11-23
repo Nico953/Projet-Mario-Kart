@@ -2,7 +2,7 @@ import math
 import pygame
 from model.terrain_tempo import ROAD 
 from constants import (
-    CAR_ACCELERATION, CAR_TURN_RATE, CAR_AIR_DRAG,
+    CAR_ACCELERATION, CAR_TURN_RATE, CAR_AIR_DRAG, WALL_BOUNCE,
     CAR_WIDTH, CAR_HEIGHT, TILE_SIZE
 )
 
@@ -122,7 +122,7 @@ class Car:
         rad = math.radians(self.angle)
         return pygame.Vector2(math.cos(rad), -math.sin(rad))
     
-    def update_position(self) -> None:
+    def update_position(self, walls: set = frozenset()) -> None:
         """Met a jour l'orientation, la vitesse et la position pour une image.
         La vitesse est décomposee en une partie longitudinale, dans l'axe de
         la voiture et une partie latérale. La partie laterale
@@ -146,7 +146,7 @@ class Car:
         self.velocity = front * v_long + side * v_lat
         # Réduction des frottements de l'air selon l'aérodynamisme du modèle
         self.velocity *= 1 - (CAR_AIR_DRAG / self.model_aerodynamics)
-        self.position += self.velocity
+        self.move(walls)
         self.throttle = 0
         self.steering = 0
 
@@ -161,6 +161,21 @@ class Car:
                 if cell in walls:
                     return True
         return False
+
+    def move(self, walls: set) -> None:
+        """Déplace la voiture axe par axe et la fait rebondir contre les murs."""
+        next_x = pygame.Vector2(self.position.x + self.velocity.x, self.position.y)
+        if self.hits_wall(next_x, walls):
+            self.velocity.x *= -WALL_BOUNCE
+        else:
+            self.position.x = next_x.x
+
+        next_y = pygame.Vector2(self.position.x, self.position.y + self.velocity.y)
+        if self.hits_wall(next_y, walls):
+            self.velocity.y *= -WALL_BOUNCE
+        else:
+            self.position.y = next_y.y
+
     
     def build_sprite(self) -> pygame.Surface:
         """Dessine la voiture pointee vers la droite (angle 0)."""
