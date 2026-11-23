@@ -15,10 +15,14 @@ class GameModel:
         self.cars: list[Car] = []
         # Index des modèles de voitures sélectionnés dans le menu pour J1 et J2
         self.selected_models = [0, 1]
+        # Index du circuit sélectionné dans le menu
+        self.selected_circuit = 0
         
         self.laps_to_win = 3
 
-    def load_circuit(self, number=2) -> None:
+    def load_circuit(self, number: int | None = None) -> None:
+        if number is None:
+            number = self.selected_circuit
         data = CIRCUITS[number]
         self.circuit = build_circuit(data["layout"])
         self.circuit.order = data["order"]
