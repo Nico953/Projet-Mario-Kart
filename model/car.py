@@ -150,6 +150,18 @@ class Car:
         self.throttle = 0
         self.steering = 0
 
+    def hits_wall(self, pos: pygame.Vector2, walls: set) -> bool:
+        """Indique si la voiture placée en pos toucherait une case mur.
+        On teste les 4 coins d'un carré centré sur la voiture.
+        """
+        r = CAR_WIDTH / 2
+        for dx in (-r, r):
+            for dy in (-r, r):
+                cell = (int((pos.x + dx) // TILE_SIZE), int((pos.y + dy) // TILE_SIZE))
+                if cell in walls:
+                    return True
+        return False
+    
     def build_sprite(self) -> pygame.Surface:
         """Dessine la voiture pointee vers la droite (angle 0)."""
         return build_car_surface(self.color, self.design)
