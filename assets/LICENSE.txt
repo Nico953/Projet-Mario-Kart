@@ -15,3 +15,7 @@ Packs utilises :
   - Voiceover Pack     https://kenney.nl/assets/voiceover-pack    (sounds/voice/ : voix du narrateur, version Male)
 
 Les fichiers ont ete renommes pour etre plus clairs (ex: road_asphalt22.png -> tiles/road.png).
+
+Modifications (24/11) : les tuiles de route et la ligne d'arrivee ont ete recolorees
+en gris fonce (asphalte), et grass.png / grass_2.png ont ete refaites a la main
+(herbe simple sans decorations).
