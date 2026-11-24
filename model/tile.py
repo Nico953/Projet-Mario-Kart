@@ -13,7 +13,6 @@ def load_image(name):
 
 TERRAIN_IMAGES = {ROAD: "road.png", GRASS: "grass.png", DIRT: "dirt.png"}
 
-
 class Tile:
     def __init__(self, col, row, terrain, color):
         self.col = col
@@ -75,7 +74,6 @@ class Tile:
                 pygame.draw.rect(sprite, pink, (i, i, tile_size - 2 * i, tile_size - 2 * i))
             return sprite
 
-
         # Glace : lisse avec petites fissures
         if self.color == (120, 190, 240):
             sprite = pygame.Surface((tile_size, tile_size))
@@ -94,7 +92,6 @@ class Tile:
             center = (tile_size // 2, tile_size // 2)
             pygame.draw.circle(sprite, (255, 200, 0), center, tile_size // 2 - 4)
             return sprite
-
 
         # Autres cases : couleur simple
         sprite = pygame.Surface((tile_size, tile_size))
