@@ -74,6 +74,7 @@ class Car:
         self.effects = []
         self.acceleration_factor = 1.0
         self.invincible = False
+        self.held_item = None
         # Caractéristiques et design du modèle choisi dans le menu
         spec = model_spec or {}
         self.model_name = spec.get("name", "Équilibrée")

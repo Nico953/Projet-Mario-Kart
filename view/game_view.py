@@ -135,11 +135,11 @@ class GameView:
             item1 = held1.name if held1 else "Aucun"
             item2 = held2.name if held2 else "Aucun"
             p1_txt = self.small_font.render(
-                f"J1 — Tours : {model.laps[0]}/{model.laps_to_win} | Objet : {item1}",
+                f"J1 — Tours : {model.laps[0]}/{model.laps_to_win} | Objet (E) : {item1}",
                 True, COLOR_P1
             )
             p2_txt = self.small_font.render(
-                f"J2 — Tours : {model.laps[1]}/{model.laps_to_win} | Objet : {item2}",
+                f"J2 — Tours : {model.laps[1]}/{model.laps_to_win} | Objet (Shift D) : {item2}",
                 True, COLOR_P2
             )
             self.screen.blit(p1_txt, (16, 9))
@@ -172,6 +172,9 @@ class GameView:
             return
         for box in model.item_boxes:
             box.draw(self.screen)
+        # Affichage des pièges actifs sur la piste (bananes et bombes)
+        for hazard in getattr(model, "hazards", []):
+            hazard.draw(self.screen)
         for car in model.cars:
             surf, rect = car.get_rotated_sprite()
             self.screen.blit(surf, rect)

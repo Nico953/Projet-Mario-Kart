@@ -6,6 +6,7 @@ PLAYER_1_KEYS = {
     "brake": [pygame.K_s],
     "left": [pygame.K_q,],
     "right": [pygame.K_d],
+    "use_item": [pygame.K_e],
 }
 
 PLAYER_2_KEYS = {
@@ -13,6 +14,7 @@ PLAYER_2_KEYS = {
     "brake": [pygame.K_DOWN],
     "left": [pygame.K_LEFT],
     "right": [pygame.K_RIGHT],
+    "use_item": [pygame.K_RSHIFT],
 }
 
 class InputHandler:

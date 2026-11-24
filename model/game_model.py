@@ -17,6 +17,8 @@ class GameModel:
         self.selected_models = [0, 1]
         # Index du circuit sélectionné dans le menu
         self.selected_circuit = 0
+        # Liste des pièges actifs posés sur la piste (bananes, bombes)
+        self.hazards = []
         
         self.laps_to_win = 3
 
@@ -42,6 +44,8 @@ class GameModel:
         self.winner = None
         self.last_checkpoint = [self.circuit.starts["1"], self.circuit.starts["2"]]
         self.on_boost = [False for car in self.cars]
+        # Réinitialise les pièges posés au début de chaque course
+        self.hazards = []
         from model.effects import SlowEffect, StunEffect, InvincibilityEffect
 
     def update(self) -> None:
@@ -49,6 +53,10 @@ class GameModel:
             return
         for box in self.item_boxes:
             box.update(1 / FPS, self.cars)
+        # Mise à jour des pièges actifs et suppression de ceux qui ont explosé/été touchés
+        for hazard in self.hazards:
+            hazard.update(1 / FPS, self.cars)
+        self.hazards = [h for h in self.hazards if h.active]
         for i, car in enumerate(self.cars):
             tile = self.circuit.get_tile_at_pixel(car.position.x, car.position.y)
             if tile is not None:

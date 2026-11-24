@@ -7,7 +7,7 @@ from constants import (
 from model.circuit_maps import CIRCUITS
 from model.game_model import GameModel
 from view.game_view import GameView
-from controller.input_handler import InputHandler
+from controller.input_handler import InputHandler, PLAYER_1_KEYS, PLAYER_2_KEYS
 
 
 class GameController:
@@ -69,9 +69,22 @@ class GameController:
         elif key == pygame.K_ESCAPE:
             self.quit()
 
+    def use_player_item(self, player_idx: int) -> None:
+        """Active l'objet tenu par le joueur donné puis vide son emplacement."""
+        if player_idx >= len(self.model.cars):
+            return
+        car = self.model.cars[player_idx]
+        if getattr(car, "held_item", None) is not None:
+            car.held_item.use(car, self.model)
+            car.held_item = None
+
     def handle_racing_key(self, key: int) -> None:
-        """Gère les raccourcis clavier ponctuels pendant la course (retour menu, rejouer)."""
-        if key == pygame.K_ESCAPE:
+        """Gère les actions ponctuelles en course (objets, retour menu, rejouer)."""
+        if key in PLAYER_1_KEYS["use_item"]:
+            self.use_player_item(0)
+        elif key in PLAYER_2_KEYS["use_item"]:
+            self.use_player_item(1)
+        elif key == pygame.K_ESCAPE:
             self.model.state = GameState.MENU
         elif key == pygame.K_RETURN and self.model.winner is not None:
             self.model.load_circuit(self.model.selected_circuit)
