@@ -15,6 +15,12 @@ LEGEND = {
     "V": (ROAD, (10, 10, 10)),
     "B": (ROAD, (255, 60, 200)),
     "M": (ROAD, (80, 80, 90)),
+    "A": (GRASS, (255, 105, 125)),  # rubis clair
+    "E": (GRASS, (215, 20, 55)),    # rubis
+    "K": (GRASS, (120, 0, 30)),     # rubis foncé
+    "S": (GRASS, (110, 180, 255)),  # saphir clair
+    "U": (GRASS, (30, 90, 220)),    # saphir
+    "X": (GRASS, (10, 30, 110)),    # saphir foncé
 }
 
 CIRCUIT_1 = [
@@ -50,13 +56,13 @@ CIRCUIT_3 = [
     "WVRRRRVVVVRRRRVW",
     "WIIWWRRVVRRWWIIW",
     "WRRWBWRMMRWBWRRW",
-    "WCCWGGWRRWGGWCCW",
-    "WRRWIIWLLWIIWRRW",
-    "WMRWIIW12WIIWRMW",
-    "WRRWGGWRRWGGWRRW",
+    "WCCWIEWRRWUIWCCW",
+    "WRRWAKWLLWXSWRRW",
+    "WMRWEKW12WXUWRMW",
+    "WRRWEKWRRWXUWRRW",
     "WRRWBWRRRRWBWRRW",
     "WRRWWRRVVRRWWRRW",
-    "WVRRRRVVVVRRRRVW",
+    "WVRCCRVVVVRCCRVW",
     "WWWWWWWWWWWWWWWW",
 ]
 
@@ -109,5 +115,5 @@ def build_circuit(layout):
 CIRCUITS = [
     {"layout": CIRCUIT_1, "order": [[3, 1, 0, 2], [3, 1, 0, 2]], "laps": 3},
     {"layout": CIRCUIT_2, "order": [[2, 1, 0], [2, 1, 0]], "laps": 5},   
-    {"layout": CIRCUIT_3, "order": [[0, 1], [1, 0]], "laps": 3},
+    {"layout": CIRCUIT_3, "order": [[2, 0, 3, 1], [3, 1, 2, 0]], "laps": 3},
 ]
