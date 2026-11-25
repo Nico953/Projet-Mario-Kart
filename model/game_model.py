@@ -46,11 +46,19 @@ class GameModel:
         self.on_boost = [False for car in self.cars]
         # Réinitialise les pièges posés au début de chaque course
         self.hazards = []
+        # Compte à rebours : de 3 à 0 voitures bloquées, de 0 à -1 on affiche "GO !"
+        self.countdown = 3.0                                        
+        # Sons à jouer pendant cette image (le contrôleur les joue puis vide la liste)
+        self.sound_events = []                                      
         from model.effects import SlowEffect, StunEffect, InvincibilityEffect
 
     def update(self) -> None:
         if self.state != GameState.RACING or self.circuit is None:
             return
+        if self.countdown > -1:                                     
+            self.countdown -= 1 / FPS                               
+        if self.countdown > 0:                                      
+            return                                                  
         for box in self.item_boxes:
             box.update(1 / FPS, self.cars)
         # Mise à jour des pièges actifs et suppression de ceux qui ont explosé/été touchés
@@ -74,9 +82,11 @@ class GameModel:
                 if self.laps[i] >= self.laps_to_win and self.winner is None:
                     self.winner = i + 1
                     print("Gagnant : voiture", self.winner)
+                    self.sound_events.append("win")                 
                 if pos in self.circuit.boosts:
                     if not self.on_boost[i]:
                         car.add_effect(BoostEffect())
+                        self.sound_events.append("boost")        
                         self.on_boost[i] = True
                 else:
                     self.on_boost[i] = False

@@ -167,6 +167,20 @@ class GameView:
                 sprite = tile.get_sprite(TILE_SIZE)
                 self.screen.blit(
                     sprite, (col_idx * TILE_SIZE, row_idx * TILE_SIZE))
+        # Prochain checkpoint de chaque joueur : rouge (J1) ou bleu (J2)
+        for i in range(len(model.cars)):
+            if i == 0:
+                color = COLOR_P1
+                radius = TILE_SIZE // 3
+            else:
+                color = COLOR_P2
+                radius = TILE_SIZE // 5
+            order = model.circuit.order[i]
+            if model.next_cp[i] < len(order):
+                numero = order[model.next_cp[i]]
+                for (col, row) in model.circuit.checkpoints[numero]:
+                    center = (col * TILE_SIZE + TILE_SIZE // 2, row * TILE_SIZE + TILE_SIZE // 2)
+                    pygame.draw.circle(self.screen, color, center,radius)
 
         if model.circuit is None:
             return

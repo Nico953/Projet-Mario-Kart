@@ -8,7 +8,7 @@ from model.circuit_maps import CIRCUITS
 from model.game_model import GameModel
 from view.game_view import GameView
 from controller.input_handler import InputHandler, PLAYER_1_KEYS, PLAYER_2_KEYS
-
+import math
 
 class GameController:
 
@@ -19,7 +19,8 @@ class GameController:
         self.view = GameView(self.screen)
         self.input_handler = InputHandler()
         self.running = True
-
+        self.load_sounds()
+        self.last_step = None
     def run(self) -> None:
         while self.running:
             self.handle_events()
@@ -64,8 +65,7 @@ class GameController:
         elif key in (pygame.K_s, pygame.K_DOWN):
             self.model.selected_circuit = (self.model.selected_circuit + 1) % nb_circuits
         elif key == pygame.K_RETURN:
-            self.model.load_circuit(self.model.selected_circuit)
-            self.model.state = GameState.RACING
+            self.start_race()
         elif key == pygame.K_ESCAPE:
             self.quit()
 
@@ -87,7 +87,7 @@ class GameController:
         elif key == pygame.K_ESCAPE:
             self.model.state = GameState.MENU
         elif key == pygame.K_RETURN and self.model.winner is not None:
-            self.model.load_circuit(self.model.selected_circuit)
+            self.start_race()
 
     def update(self) -> None:
         if self.model.state != GameState.RACING:
@@ -97,6 +97,7 @@ class GameController:
         for car, player_input in zip(self.model.cars, inputs):
             self.apply_input(car, player_input)
         self.model.update()
+        self.play_sounds()
 
     def apply_input(self, car, player_input) -> None:
         if player_input['accelerate']:
@@ -115,3 +116,32 @@ class GameController:
         self.running = False
         pygame.quit()
         sys.exit()
+    def load_sounds(self) -> None:
+        """Charge les voix du compte à rebours et les sons de boost et de victoire."""
+        voice = "assets/sounds/voice/"
+        self.countdown_sounds = {
+            3: pygame.mixer.Sound(voice + "three.ogg"),
+            2: pygame.mixer.Sound(voice + "two.ogg"),
+            1: pygame.mixer.Sound(voice + "one.ogg"),
+            0: pygame.mixer.Sound(voice + "go.ogg"),
+        }
+        self.sounds = {
+            "boost": pygame.mixer.Sound("assets/sounds/boost.ogg"),
+            "win": pygame.mixer.Sound(voice + "you_win.ogg"),
+        }
+
+    def start_race(self) -> None:
+        """Charge le circuit choisi et relance le compte à rebours."""
+        self.model.load_circuit(self.model.selected_circuit)
+        self.model.state = GameState.RACING
+        self.last_step = None
+
+    def play_sounds(self) -> None:
+        """Joue la voix du compte à rebours et les sons demandés par le modèle."""
+        step = max(0, math.ceil(self.model.countdown))
+        if step != self.last_step:
+            self.countdown_sounds[step].play()
+            self.last_step = step
+        for name in self.model.sound_events:
+            self.sounds[name].play()
+        self.model.sound_events.clear()
