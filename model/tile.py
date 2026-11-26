@@ -66,14 +66,13 @@ class Tile:
                     pygame.draw.rect(sprite, color, (c * size, r * size, size, size))
             return sprite
         
-        # Boost : rectangles roses de plus en plus foncés vers le centre
+        # Boost : dégradé rose du bas (clair) vers le haut (foncé)
         if self.color == (255, 60, 200):
             sprite = pygame.Surface((tile_size, tile_size))
-            for i in range(0, tile_size // 2, 4):
-                pink = (255 - i * 3, 90 - i, 200 - i * 2)
-                pygame.draw.rect(sprite, pink, (i, i, tile_size - 2 * i, tile_size - 2 * i))
+            for y in range(0, tile_size, 4):
+                pink = (130 + y * 2, 20 + y, 100 + y * 2)
+                pygame.draw.rect(sprite, pink, (0, y, tile_size, 4))
             return sprite
-
         # Glace : lisse avec petites fissures
         if self.color == (120, 190, 240):
             sprite = pygame.Surface((tile_size, tile_size))

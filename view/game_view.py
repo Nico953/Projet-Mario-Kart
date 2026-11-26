@@ -7,7 +7,7 @@ from constants import (
 from model.car import build_car_surface
 from model.circuit_maps import CIRCUITS, LEGEND
 from model.game_model import GameModel
-
+import math
 
 class GameView:
 
@@ -17,7 +17,8 @@ class GameView:
         # Polices supplémentaires pour le titre et les barres de statistiques
         self.title_font = pygame.font.SysFont("Arial", 36, bold=True)
         self.small_font = pygame.font.SysFont("Arial", 16)
-
+        # Grande police pour le compte à rebours
+        self.countdown_font = pygame.font.SysFont("Arial", 140, bold=True)
     def draw(self, model: GameModel) -> None:
         self.screen.fill(COLOR_BG)
         if model.state == GameState.MENU:
@@ -193,5 +194,16 @@ class GameView:
             surf, rect = car.get_rotated_sprite()
             self.screen.blit(surf, rect)
         self._draw_hud(model)
+        self._draw_countdown(model)                                 
         if model.winner is not None:
             self._draw_winner_overlay(model)
+    def _draw_countdown(self, model: GameModel) -> None:
+        """Affiche 3, 2, 1 puis GO ! au centre de l'écran."""
+        if model.countdown > 0:
+            text = str(math.ceil(model.countdown))
+        elif model.countdown > -1:
+            text = "GO !"
+        else:
+            return
+        surf = self.countdown_font.render(text, True, COLOR_ACCENT)
+        self.screen.blit(surf, surf.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)))
